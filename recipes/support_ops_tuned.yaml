@@ -1,0 +1,43 @@
+# Demo recipe with thresholds tuned on benchmarks/cases.jsonl and checked on a 100-case hold-out set.
+# Small samples: treat as a starting point and re-tune on your own data.
+# DeciderKit recipe for the demo support-ops agent.
+# Hard rules = plain code that always runs first. Checks = Decider's fuzzy judgement.
+version: 1
+
+defaults:
+  mode: enforce            # start with "shadow" in a real rollout: log only, change nothing
+  uncertain: guide         # unsure -> ask the user (other options: confirm, deny, llm, proceed)
+  on_decider_error: deny   # if the Decider server is down, block risky tools (fail closed)
+  allow_above: 0.80        # P(true) at or above this -> pass
+  block_below: 0.30        # P(true) at or below this -> fail
+
+unlisted_tools: proceed    # tools not listed here run normally; use "deny" for a strict allow-list
+
+tools:
+  lookup_orders:
+    skip: true             # read-only, so no check needed
+
+  refund_order:
+    hard_rules:
+      - required: [order_id, amount]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+      - { arg: amount, min: 0.01 }
+      - { arg: amount, max: 500, message: "Refunds over $500 need a human agent" }
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }
+      - { use: intent_matches_tool, allow_above: 0.5119, block_below: 0.3899 }
+
+  cancel_order:
+    hard_rules:
+      - required: [order_id]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }
+      - { use: intent_matches_tool, allow_above: 0.5119, block_below: 0.3899 }
+
+  update_address:
+    hard_rules:
+      - required: [order_id, new_address]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }

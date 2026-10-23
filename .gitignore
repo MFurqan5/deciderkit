@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+audit.jsonl
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+benchmarks/results/mock.*

@@ -1,0 +1,41 @@
+# DeciderKit recipe for the demo support-ops agent.
+# Hard rules = plain code that always runs first. Checks = Decider's fuzzy judgement.
+version: 1
+
+defaults:
+  mode: enforce            # start with "shadow" in a real rollout: log only, change nothing
+  uncertain: guide         # unsure -> ask the user (other options: confirm, deny, llm, proceed)
+  on_decider_error: deny   # if the Decider server is down, block risky tools (fail closed)
+  allow_above: 0.80        # P(true) at or above this -> pass
+  block_below: 0.30        # P(true) at or below this -> fail
+
+unlisted_tools: proceed    # tools not listed here run normally; use "deny" for a strict allow-list
+
+tools:
+  lookup_orders:
+    skip: true             # read-only, so no check needed
+
+  refund_order:
+    hard_rules:
+      - required: [order_id, amount]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+      - { arg: amount, min: 0.01 }
+      - { arg: amount, max: 500, message: "Refunds over $500 need a human agent" }
+    checks:
+      - grounded_args        # built-in: did the user really give these values?
+      - intent_matches_tool  # built-in: did the user really ask for a refund?
+
+  cancel_order:
+    hard_rules:
+      - required: [order_id]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+    checks:
+      - grounded_args
+      - intent_matches_tool
+
+  update_address:
+    hard_rules:
+      - required: [order_id, new_address]
+      - { arg: order_id, pattern: 'ORD-\d{6}' }
+    checks:
+      - grounded_args

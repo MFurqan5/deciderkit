@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deciderkit"
+version = "0.1.0"
+description = "Config-driven decision guardrails for Strands agents, powered by Strands Decider 2B."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["pyyaml>=6.0"]
+
+[project.optional-dependencies]
+strands = ["strands-agents>=1.59.0"]
+bedrock = ["boto3>=1.34"]
+dev = ["pytest>=8.0", "strands-agents>=1.59.0"]
+
+[project.scripts]
+deciderkit = "deciderkit.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["deciderkit*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

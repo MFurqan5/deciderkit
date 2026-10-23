@@ -1,0 +1,19 @@
+# CANDIDATE thresholds from `deciderkit tune` on benchmarks/cases.jsonl (seed 1812), run 20261019-154330.
+# They were tuned on the SAME cases they were measured on, so treat them as unproven until you
+# evaluate them on the hold-out set:
+#   python benchmarks/make_dataset.py --seed 7 --out benchmarks/cases_holdout.jsonl
+#   python benchmarks/run_benchmark.py ... --cases benchmarks/cases_holdout.jsonl --recipe benchmarks/tuned_recipe.yaml
+version: 1
+defaults: { uncertain: guide, on_decider_error: deny }
+tools:
+  refund_order:
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }
+      - { use: intent_matches_tool, allow_above: 0.5119, block_below: 0.3899 }
+  cancel_order:
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }
+      - { use: intent_matches_tool, allow_above: 0.5119, block_below: 0.3899 }
+  update_address:
+    checks:
+      - { use: grounded_args, allow_above: 0.7472, block_below: 0.4808 }

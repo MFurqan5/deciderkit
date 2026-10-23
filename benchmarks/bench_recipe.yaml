@@ -1,0 +1,7 @@
+# Benchmark recipe: Decider checks only (no hard rules) so we measure model judgement alone.
+version: 1
+defaults: { uncertain: guide, on_decider_error: deny, allow_above: 0.80, block_below: 0.30 }
+tools:
+  refund_order:   { checks: [grounded_args, intent_matches_tool] }
+  cancel_order:   { checks: [grounded_args, intent_matches_tool] }
+  update_address: { checks: [grounded_args] }
