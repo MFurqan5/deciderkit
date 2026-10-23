@@ -1,0 +1,53 @@
+{
+  "mock": false,
+  "hardware": "g5.xlarge (A10G)",
+  "decider_health": {
+    "status": "ok",
+    "model": "strands-decider-2B-hobson-v19",
+    "checkpoint": "StrandsAgents/strands-decider-2B-hobson-v19",
+    "base_model": "Qwen/Qwen3.5-2B-Base",
+    "num_slots": 24,
+    "max_length": 4096,
+    "temperature": 0.9627721607677362,
+    "device": "cuda",
+    "prefix_cache": true
+  },
+  "llm_model_id": "us.amazon.nova-2-lite-v1:0",
+  "cases": 100,
+  "results": [
+    {
+      "setup": "decider",
+      "n": 100,
+      "accuracy": 0.76,
+      "bad_calls_let_through": 1,
+      "good_calls_blocked": 23,
+      "p50_ms": 180.45499999999998,
+      "p95_ms": 185.78,
+      "llm_calls": 0,
+      "llm_cost_usd": 0.0,
+      "sent_to_ladder_if_enabled": 49
+    },
+    {
+      "setup": "llm",
+      "n": 100,
+      "accuracy": 1.0,
+      "bad_calls_let_through": 0,
+      "good_calls_blocked": 0,
+      "p50_ms": 2762.9990489999727,
+      "p95_ms": 5778.0992479999895,
+      "llm_calls": 100,
+      "llm_cost_usd": 0.02029126
+    },
+    {
+      "setup": "ladder",
+      "n": 100,
+      "accuracy": 0.99,
+      "bad_calls_let_through": 1,
+      "good_calls_blocked": 0,
+      "p50_ms": 817.0550000000001,
+      "p95_ms": 4808.13,
+      "llm_calls": 57,
+      "llm_cost_usd": 0.01149258
+    }
+  ]
+}
